@@ -13,7 +13,7 @@
 >
 > The Unix epoch is 00:00:00 [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) on 1 January 1970 (an arbitrary date). Unix time is nonlinear with a  leap second having the same Unix time as the second before it (or after  it, implementation dependent), so that every day is treated as if it  contains exactly 86400 seconds,[[2\]](https://en.wikipedia.org/wiki/Unix_time#cite_note-single-unix-spec-4.16-2) with no seconds added to or subtracted from the day as a result of  positive or negative leap seconds. Due to this treatment of leap  seconds, Unix time is not a true representation of UTC.
 >
-> Unix time is widely used in [operating systems](https://en.wikipedia.org/wiki/Operating_system) and [file formats](https://en.wikipedia.org/wiki/File_format). In [Unix-like](https://en.wikipedia.org/wiki/Unix-like) operating systems, `date` is a command which will print or set the current time; by default, it prints or sets the time in the system [time zone](https://en.wikipedia.org/wiki/Time_zone), but with the `-u` flag, it prints or sets the time in UTC and, with the `TZ` [environment variable](https://en.wikipedia.org/wiki/Environment_variable) set to refer to a particular time zone, prints or sets the time in that time zone.[[4\]](https://en.wikipedia.org/wiki/Unix_time#cite_note-4)
+> Unix time is widely used in [operating systems](https://en.wikipedia.org/wiki/Operating_system) and [file formats](https://en.wikipedia.org/wiki/File_format). 
 
 
 
@@ -54,7 +54,7 @@ Guess what will happen after '2038-01-19 03:14:08' with `TIMESTAMP`?
 > By default, the current time zone for each connection is the server's time. 
 
 ### How to decide
-Briefly speaking, `DATETIME` is good enough for usage in the same time zone while globalization is not required. However, to be more general, [Epoch time](https://en.wikipedia.org/wiki/Unix_time) should be always preferred as it is precise as well as versatile.
+Briefly speaking, `DATETIME` is good enough for usage in the same time zone while globalization is not required. However, to be more general, [Unix time](https://en.wikipedia.org/wiki/Unix_time) should be always preferred as it is precise as well as versatile.
 
 
 ### Performance Benchmark
@@ -63,10 +63,17 @@ Briefly speaking, `DATETIME` is good enough for usage in the same time zone whil
 # college.create_time : timestamp
 
 -- sql1, 14234/14237 AVG = 0.0014s
-SELECT id, college_name FROM college WHERE do_delete = FALSE AND UNIX_TIMESTAMP(create_time) BETWEEN UNIX_TIMESTAMP('2019-06-19 15:00:00') AND UNIX_TIMESTAMP('2019-06-19 16:00:00');
+SELECT id, college_name 
+FROM college 
+WHERE do_delete = FALSE 
+	AND UNIX_TIMESTAMP(create_time) BETWEEN UNIX_TIMESTAMP('2019-06-19 15:00:00') 
+	AND UNIX_TIMESTAMP('2019-06-19 16:00:00');
         
 -- sql2, 14234/14237 AVG = 0.0026s       
-SELECT id, college_name FROM college WHERE do_delete = FALSE AND create_time BETWEEN '2019-06-19 15:00:00' AND '2019-06-19 16:00:00';
+SELECT id, college_name 
+FROM college 
+WHERE do_delete = FALSE 
+	AND create_time BETWEEN '2019-06-19 15:00:00' AND '2019-06-19 16:00:00';
 ```
 
 
@@ -76,16 +83,22 @@ SELECT id, college_name FROM college WHERE do_delete = FALSE AND create_time BET
 # msg_log.c_time : timestamp
 
 -- sql1, 6/25538 AVG = 
-select id from msg_log where date between '2016-06-12' and '2016-06-13';
+select id 
+from msg_log 
+where date between '2016-06-12' and '2016-06-13';
 
 -- sql2, 6/25538 AVG = 
-select id from msg_log where c_time between '2016-06-12 00:00:00' and '2016-06-14 00:00:00';
+select id 
+from msg_log 
+where c_time between '2016-06-12 00:00:00' and '2016-06-14 00:00:00';
 
 -- sql3, 6/25538 AVG = 
-select id from msg_log where unix_timestamp(c_time) between unix_timestamp('2016-06-12 00:00:00') and unix_timestamp('2016-06-14 00:00:00');
+select id 
+from msg_log 
+where unix_timestamp(c_time) between unix_timestamp('2016-06-12 00:00:00') and unix_timestamp('2016-06-14 00:00:00');
 ```
 
-| epoch/time/sql | sql 1 (date) | sql 2 (timestamp) | sql 3 (timestamp) |
+| epoch/time in sec/SQL | sql 1 (date) | sql 2 (timestamp) | sql 3 (timestamp) |
 | -------------- | ------------ | ---------------- | ---------------- |
 | 1              | 0.00065      | 0.384            | 0.076            |
 | 2              | 0.00062      | 0.382            | 0.076            |
@@ -97,21 +110,27 @@ select id from msg_log where unix_timestamp(c_time) between unix_timestamp('2016
 # college.create_time: datetime
 
 -- sql1, AVG = 0.0014s
-SELECT id, college_name FROM college WHERE do_delete = FALSE AND UNIX_TIMESTAMP(create_time) BETWEEN 1530374400 AND 1567180800;
+SELECT id, college_name 
+FROM college 
+WHERE do_delete = FALSE 
+	AND UNIX_TIMESTAMP(create_time) BETWEEN 1530374400 AND 1567180800;
        
 -- sql2, AVG = 0.0021s
-select id, college_name from college where do_delete = false and (create_time between from_unixtime(1530374400) and from_unixtime(1567180800));
+select id, college_name 
+from college 
+where do_delete = false 
+	and (create_time between from_unixtime(1530374400) and from_unixtime(1567180800));
 ```
 
 
-## Unix Time in Popular Programming Lanuages 
+## Unix Time in Popular Programming Languages 
 | Language            | Get Current Unix Time                                        | Unix Time -> String<br />ut=1633060800<br />s="2021-10-01 12:00:00" | String -> Unix Time<br />s="2021-10-01 12:00:00"<br />ut=1633060800 |
 | ------------------- | :----------------------------------------------------------- | ------------------------------------------------------------ | ------------------------------------------------------------ |
 | Java                | import java.util.Date;<br />Date d = new Date();<br />long ut =d.getTime() / 1000L;<br />long ut1 = System.currentTimeMillis() / 1000L;<br />import java.time.Instant;<br />long ut2= Instant.now().getEpochSecond();<br /> | DateTimeFormatter f= DateTimeFormatter.ofPattern("yyyy-MM-dd hh:mm:ss"); <br />d.toString(f) | d=DateTime.parse(s, f);<br />LocalDate d2= LocalDate.parse(s, f);<br />long ut = d.getTime()/1000L; |
 | Python              | import time <br />ut=int(time.time())                        | d=time.localtime(ut)<br />s=time.strftime(f, d)              | f="%Y-%m-%d %H:%M:%S"<br />d=time.strptime(s, f)<br />ut=int(time.mktime(d)) |
 | JavaScript          | let d = Date.now() <br />let d2 = new Date() <br />let ut=Math.round(d.valueOf())<br />let ut1=Math.round(d.getTime()/1000) | // approximate output<br />let s=ut.toLocaleString()         | ut=Math.round(Date.parse(s).getTimes()/1000) // Date.parse() is not recommended as ES5 though |
 | momment.js          | import * as moment from 'moment'<br />ut=moment().unix()     | let m=moment(ut)<br />let f="YYYY-MM-DD HH:hh:ss"<br />let s=m.format(f) | m = moment(s, f)                                             |
-| Microsoft .NET / C# | ut= (DateTime.Now.ToUniversalTime().Ticks - 621355968000000000) / 10000000 | DateAdd("s", ut, "01/01/1970 00:00:00")                      |                                                              |
-| Unix / Linux        | ut=date +%s                                                  | s=date -d "@$ut" +"%F %R:%S"                                 | date --date="$s" +%s                                         |
+| Microsoft .NET / C# | Using System;<br />DateTime epoch = new DateTime(1970,1,1,0,0,0,0, System.DateTimeKind.Utc);<br />Int32 ut= (Int32)(DateTime.UtcNow.Subtract(epoch).TotalSeconds; | DateTime dt= epoch.AddSeconds( ut).ToLocalTime();<br />var s = dt.ToString("yyyyMMdd HH:mm:ss") | DateTime.Parse(s, "yyyyMMdd HH:mm:ssZ")                      |
+|                     | ut=date +%s                                                  | s=date -d "@$ut" +"%F %R:%S"                                 | date --date="$s" +%s                                         |
 | MySQL               | SELECT @ut := UNIX_TIMESTAMP(NOW())                          | SELECT @s:=FROM_UNIXTIME(@ut, "%Y-%m-%d %T")                 | DATE_FORMAT(@s,"%Y-%m-%d %T")                                |
-| SQL Server          | SELECT DATEDIFF(s, '1970-01-01 00:00:00', GETUTCDATE())      | DATEADD(s, ut, '1970-01-01 00:00:00')                        |                                                              |
+| SQL Server          | DECLARE @ut AS INT<br />SELECT @ut = DATEDIFF(S, '1970-01-01 00:00:00', GETUTCDATE()) | DECLARE @s AS VARCHAR(30)<br />SELECT @s =DATEADD(S, @ut, '1970-01-01 00:00:00') | SELECT @ut = DATEDIFF(S, '1970-01-01 00:00:00', @s)          |
