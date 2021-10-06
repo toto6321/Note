@@ -54,7 +54,7 @@ Guess what will happen after '2038-01-19 03:14:08' with `TIMESTAMP`?
 > By default, the current time zone for each connection is the server's time. 
 
 ### How to decide
-Briefly speaking, `DATETIME` is good enough for usage in the same time zone while globalization is not required. However, to be more general, [Unix time](https://en.wikipedia.org/wiki/Unix_time) should be always preferred as it is precise as well as versatile.
+Briefly speaking, `DATETIME` is good enough for usage in the same time zone while globalization is not required. However, to be more general, [Unix time](https://en.wikipedia.org/wiki/Unix_time) (Timestamp in MySQL) should be always preferred as it is precise as well as versatile.
 
 
 ### Performance Benchmark
@@ -66,8 +66,8 @@ Briefly speaking, `DATETIME` is good enough for usage in the same time zone whil
 SELECT id, college_name 
 FROM college 
 WHERE do_delete = FALSE 
-	AND UNIX_TIMESTAMP(create_time) BETWEEN UNIX_TIMESTAMP('2019-06-19 15:00:00') 
-	AND UNIX_TIMESTAMP('2019-06-19 16:00:00');
+	AND UNIX_TIMESTAMP(create_time) 
+		BETWEEN UNIX_TIMESTAMP('2019-06-19 15:00:00') AND UNIX_TIMESTAMP('2019-06-19 16:00:00');
         
 -- sql2, 14234/14237 AVG = 0.0026s       
 SELECT id, college_name 
@@ -95,7 +95,8 @@ where c_time between '2016-06-12 00:00:00' and '2016-06-14 00:00:00';
 -- sql3, 6/25538 AVG = 
 select id 
 from msg_log 
-where unix_timestamp(c_time) between unix_timestamp('2016-06-12 00:00:00') and unix_timestamp('2016-06-14 00:00:00');
+where unix_timestamp(c_time) 
+	between unix_timestamp('2016-06-12 00:00:00') and unix_timestamp('2016-06-14 00:00:00');
 ```
 
 | epoch/time in sec/SQL | sql 1 (date) | sql 2 (timestamp) | sql 3 (timestamp) |
@@ -134,3 +135,7 @@ where do_delete = false
 |                     | ut=date +%s                                                  | s=date -d "@$ut" +"%F %R:%S"                                 | date --date="$s" +%s                                         |
 | MySQL               | SELECT @ut := UNIX_TIMESTAMP(NOW())                          | SELECT @s:=FROM_UNIXTIME(@ut, "%Y-%m-%d %T")                 | DATE_FORMAT(@s,"%Y-%m-%d %T")                                |
 | SQL Server          | DECLARE @ut AS INT<br />SELECT @ut = DATEDIFF(S, '1970-01-01 00:00:00', GETUTCDATE()) | DECLARE @s AS VARCHAR(30)<br />SELECT @s =DATEADD(S, @ut, '1970-01-01 00:00:00') | SELECT @ut = DATEDIFF(S, '1970-01-01 00:00:00', @s)          |
+
+
+
+​	
