@@ -54,41 +54,57 @@ Guess what will happen after '2038-01-19 03:14:08' with `TIMESTAMP`?
 > By default, the current time zone for each connection is the server's time. 
 
 ### How to decide
-Briefly speaking, `DATETIME` is good enough for usage in the same time zone while globalization is not required. However, to be more general, [Unix time](https://en.wikipedia.org/wiki/Unix_time) (Timestamp in MySQL) should be always preferred as it is precise as well as versatile.
+Briefly speaking, `DATETIME` is good enough for usage in the same time zone while globalization is not required. However, to be more general, [Unix time](https://en.wikipedia.org/wiki/Unix_time) (`Timestamp` in MySQL) should be always preferred as it is precise as well as versatile.
 
 
-### Performance Benchmark
+### Performance Analysis
 
 ```SQL
 # msg_log.date : date
 # msg_log.c_time : timestamp
 
--- sql1, 6/25538 AVG = 
+-- sql1, 6/25538 AVG = 0.000656s
 select id 
 from msg_log 
 where date between '2016-06-12' and '2016-06-13';
 
--- sql2, 6/25538 AVG = 
+-- sql2, 6/25538 AVG = 0.3838s
 select id 
 from msg_log 
-where c_time between '2016-06-12 00:00:00' and '2016-06-14 00:00:00';
+where c_time between '2016-06-12 00:00:00' and '2016-06-13 00:00:00';
 
--- sql3, 6/25538 AVG = 
+-- sql3, 6/25538 AVG = 0.0786s
 select id 
 from msg_log 
 where unix_timestamp(c_time) 
-	between unix_timestamp('2016-06-12 00:00:00') and unix_timestamp('2016-06-14 00:00:00');
+	between unix_timestamp('2016-06-12 00:00:00') and unix_timestamp('2016-06-13 00:00:00');
 ```
 
+The SQL statements above are executed over a table **msg_log **in which column **date** is in `Date` Type while column **c_time** is in `Timestamp` Type. All of them select 6 records from 25538 records. 
+
+* SQL 1: query with date string
+* SQL 2: query with timestamp string
+* SQL 3: query with unix time transformed by MySQL built-in function `unix_timestamp`
+
+The following table shows how many seconds they take respectively.
+
+
 | Epoch/Time in Sec/SQL | sql 1 (date) | sql 2 (timestamp) | sql 3 (timestamp) |
-| -------------- | ------------ | ---------------- | ---------------- |
-| 1              | 0.00065      | 0.384            | 0.076            |
-| 2              | 0.00062      | 0.382            | 0.076            |
-| 3              | 0.00060      | 0.383            | 0.089            |
-| 4              | 0.00081      | 0.386            | 0.076            |
-| 5              | 0.00060      | 0.384            | 0.076            |
+| --------------------- | ------------ | ----------------- | ----------------- |
+| 1                     | 0.00065      | 0.384             | 0.076             |
+| 2                     | 0.00062      | 0.382             | 0.076             |
+| 3                     | 0.00060      | 0.383             | 0.089             |
+| 4                     | 0.00081      | 0.386             | 0.076             |
+| 5                     | 0.00060      | 0.384             | 0.076             |
+| Average               | 0.000656     | 0.3838            | 0.0786            |
 
+From the result we can draw into conclusions:
 
+1. `Date` is hundreds of times faster than `Timestamp` in query.
+
+2. `Unix time` (in long Type) is tens of times faster than `Timestamp` string.
+
+   
 
 
 ## Unix Time in Popular Programming Languages 
