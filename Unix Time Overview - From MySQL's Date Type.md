@@ -11,7 +11,7 @@
 
 > **Unix time** (also known as **Epoch time**, **Posix time**,[[1\]](https://en.wikipedia.org/wiki/Unix_time#cite_note-1) **seconds since the Epoch**,[[2\]](https://en.wikipedia.org/wiki/Unix_time#cite_note-single-unix-spec-4.16-2) or **UNIX Epoch time**[[3\]](https://en.wikipedia.org/wiki/Unix_time#cite_note-3)) is a system for describing a [point in time](https://en.wikipedia.org/wiki/Timestamp). It is the number of [seconds](https://en.wikipedia.org/wiki/Second) that have elapsed since the *Unix epoch*, excluding [leap seconds](https://en.wikipedia.org/wiki/Leap_second). 
 >
-> The Unix epoch is 00:00:00 [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) on 1 January 1970 (an arbitrary date). Unix time is nonlinear with a  leap second having the same Unix time as the second before it (or after  it, implementation dependent), so that every day is treated as if it  contains exactly 86400 seconds,[[2\]](https://en.wikipedia.org/wiki/Unix_time#cite_note-single-unix-spec-4.16-2) with no seconds added to or subtracted from the day as a result of  positive or negative leap seconds. Due to this treatment of leap  seconds, Unix time is not a true representation of UTC.
+> The Unix epoch is 00:00:00 [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) on 1 January 1970 (an arbitrary date). Unix time is nonlinear with a  leap second having the same Unix time as the second before it (or after it, implementation dependent), so that every day is treated as if it contains exactly 86400 seconds,[[2\]](https://en.wikipedia.org/wiki/Unix_time#cite_note-single-unix-spec-4.16-2) with no seconds added to or subtracted from the day as a result of  positive or negative leap seconds. Due to this treatment of leap  seconds, Unix time is not a true representation of UTC.
 >
 > Unix time is widely used in [operating systems](https://en.wikipedia.org/wiki/Operating_system) and [file formats](https://en.wikipedia.org/wiki/File_format). 
 
@@ -82,9 +82,9 @@ where unix_timestamp(c_time)
 
 The SQL statements above are executed over a table **msg_log **in which column **date** is in `Date` Type while column **c_time** is in `Timestamp` Type. All of them select 6 records from 25538 records. 
 
-* SQL 1: query with date string
-* SQL 2: query with timestamp string
-* SQL 3: query with unix time transformed by MySQL built-in function `unix_timestamp`
+* SQL 1: query with a date string
+* SQL 2: query with a timestamp string
+* SQL 3: query with an unix time transformed by MySQL built-in function `unix_timestamp`
 
 The following table shows how many seconds they take respectively.
 
