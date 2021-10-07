@@ -99,7 +99,7 @@ where unix_timestamp(c_time)
 	between unix_timestamp('2016-06-12 00:00:00') and unix_timestamp('2016-06-14 00:00:00');
 ```
 
-| epoch/time in sec/SQL | sql 1 (date) | sql 2 (timestamp) | sql 3 (timestamp) |
+| Epoch/Time in Sec/SQL | sql 1 (date) | sql 2 (timestamp) | sql 3 (timestamp) |
 | -------------- | ------------ | ---------------- | ---------------- |
 | 1              | 0.00065      | 0.384            | 0.076            |
 | 2              | 0.00062      | 0.382            | 0.076            |
