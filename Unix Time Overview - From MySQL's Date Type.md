@@ -59,25 +59,6 @@ Briefly speaking, `DATETIME` is good enough for usage in the same time zone whil
 
 ### Performance Benchmark
 
-```sql
-# college.create_time : timestamp
-
--- sql1, 14234/14237 AVG = 0.0014s
-SELECT id, college_name 
-FROM college 
-WHERE do_delete = FALSE 
-	AND UNIX_TIMESTAMP(create_time) 
-		BETWEEN UNIX_TIMESTAMP('2019-06-19 15:00:00') AND UNIX_TIMESTAMP('2019-06-19 16:00:00');
-        
--- sql2, 14234/14237 AVG = 0.0026s       
-SELECT id, college_name 
-FROM college 
-WHERE do_delete = FALSE 
-	AND create_time BETWEEN '2019-06-19 15:00:00' AND '2019-06-19 16:00:00';
-```
-
-
-
 ```SQL
 # msg_log.date : date
 # msg_log.c_time : timestamp
@@ -107,21 +88,7 @@ where unix_timestamp(c_time)
 | 4              | 0.00081      | 0.386            | 0.076            |
 | 5              | 0.00060      | 0.384            | 0.076            |
 
-```sql
-# college.create_time: datetime
 
--- sql1, AVG = 0.0014s
-SELECT id, college_name 
-FROM college 
-WHERE do_delete = FALSE 
-	AND UNIX_TIMESTAMP(create_time) BETWEEN 1530374400 AND 1567180800;
-       
--- sql2, AVG = 0.0021s
-select id, college_name 
-from college 
-where do_delete = false 
-	and (create_time between from_unixtime(1530374400) and from_unixtime(1567180800));
-```
 
 
 ## Unix Time in Popular Programming Languages 
