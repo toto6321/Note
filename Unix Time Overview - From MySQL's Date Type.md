@@ -119,6 +119,3 @@ From the result we can draw into conclusions:
 | MySQL               | SELECT @ut := UNIX_TIMESTAMP(NOW())                          | SELECT @s:=FROM_UNIXTIME(@ut, "%Y-%m-%d %T")                 | DATE_FORMAT(@s,"%Y-%m-%d %T")                                |
 | SQL Server          | DECLARE @ut AS INT<br />SELECT @ut = DATEDIFF(S, '1970-01-01 00:00:00', GETUTCDATE()) | DECLARE @s AS VARCHAR(30)<br />SELECT @s =DATEADD(S, @ut, '1970-01-01 00:00:00') | SELECT @ut = DATEDIFF(S, '1970-01-01 00:00:00', @s)          |
 
-
-
-​	
