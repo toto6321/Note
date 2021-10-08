@@ -452,13 +452,126 @@ dt.previous(pendulum.FRIDAY)	### DateTime(2021, 10, 1, 0, 0, 0, tzinfo=Timezone(
 
 ##### Comparison
 
+Pendulum support direct comparison with `==`, `>`, `<`, `!=`, `>=` and `<=` operations.
+
+Remember, the comparison is done with **UNIX TIME(TIMESTAMP)** in essense. In other words, it will automatically transfrom datetimes into the UTC time zone.
+
+```PYTHON
+now8 = pendulum.now()		### DateTime(2021, 10, 8, 15, 58, 27, 992001, tzinfo=Timezone('Asia/Shanghai'))
+now0 = now8.in_tz('UTC')	### DateTime(2021, 10, 8, 7, 58, 27, 992001, tzinfo=Timezone('UTC'))
+now0 == now8				### True
+```
 
 
-##### Arithmetic
+
+##### Arithmetics
+
+###### Add & Substract
+
+`add()` and `subtract()` functions enable us go through a period of times with the new Date Time returned.
+
+* `add(years, months, weeks, days, hours, minutes, seconds, microseconds): DateTime`
+* `subtract(years, months, weeks, days, hours, minutes, seconds, microseconds): DateTime`
+
+```python
+dt 						### DateTime(2021, 10, 8, 8, 1, 2, 3, tzinfo=Timezone('Asia/Shanghai'))
+dt.add(weeks=1)			### DateTime(2021, 10, 15, 8, 1, 2, 3, tzinfo=Timezone('Asia/Shanghai'))
+dt.add(weeks=1, days=1)	### DateTime(2021, 10, 16, 8, 1, 2, 3, tzinfo=Timezone('Asia/Shanghai'))
+
+dt.subtract(weeks=1)			### DateTime(2021, 10, 1, 8, 1, 2, 3, tzinfo=Timezone('Asia/Shanghai'))
+dt.subtract(weeks=1, days=1)	### DateTime(2021, 9, 30, 8, 1, 2, 3, tzinfo=Timezone('Asia/Shanghai'))
+```
 
 
 
+###### Diff
 
+`diff()` returns a `Period` (inherited from `Duration` class) instance that represents the total duration between two `DateTime` instances. This interval can be then expressed in various units.
+
+* `.diff(dt=None, abs=True): Period`
+
+```python
+start = pendulum.datetime(2000, 1, 1)
+end = pendulum.datetime(2021, 10, 8, 1, 2, 3)
+
+diff = end - start
+
+type(diff)
+### pendulum.period.Period
+
+diff.years				### 21
+diff.months							### 9
+diff.days 				### 7951
+diff.hours				### 1
+
+diff.in_years()			### 21
+diff.in_months()					### 261
+diff.in_days()			### 7951
+diff.in_hours() 		### 190825
+```
+
+Pay attention to the **Period** class. It is compatible with the `timedelta` class regarding its attributes.
+
+
+
+###### Period
+
+A `Period` instance represents a period of time from *start* DateTime to *end* DateTime.
+
+* `pendulum.period(start: DateTime, end: DateTime): Period`
+
+```python
+start = pendulum.datetime(2020, 1, 1)
+end = pendulum.datetime(2021, 10, 8)
+
+period = end - start				### <Period [2020-01-01T00:00:00+00:00 -> 2021-10-08T00:00:00+00:00]>
+period = pendulum.period(start, end)### <Period [2020-01-01T00:00:00+00:00 -> 2021-10-08T00:00:00+00:00]>
+
+
+period.start == start		### True
+period.end == end			### False
+period.months				### 9
+period.in_months()			### 19
+
+start + period == end		### True
+period = start - end
+### <Period [2021-10-08T00:00:00+00:00 -> 2020-01-01T00:00:00+00:00]>
+end + period == start 		### True
+```
+
+
+
+###### Range
+
+A `Range` instance enables us to iterate over a range of date time.
+
+* `pendulum.Period.range(unit: str): generator`
+
+```python
+start = pendulum.datetime(2021, 1, 1)
+end = pendulum.datetime(2021, 10, 8)
+period = end - start
+
+range_month = period.range('months')
+
+for month in range_month():
+    print(month)
+  
+
+###
+"""
+2021-01-01T00:00:00+00:00
+2021-02-01T00:00:00+00:00
+2021-03-01T00:00:00+00:00
+2021-04-01T00:00:00+00:00
+2021-05-01T00:00:00+00:00
+2021-06-01T00:00:00+00:00
+2021-07-01T00:00:00+00:00
+2021-08-01T00:00:00+00:00
+2021-09-01T00:00:00+00:00
+2021-10-01T00:00:00+00:00
+"""
+```
 
 
 
