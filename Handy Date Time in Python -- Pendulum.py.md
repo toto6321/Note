@@ -331,6 +331,39 @@ dt.format('[Date:] YYYY-MM-DD')					#### 'Date: 2021-10-08'
 
 #### String Parsing 
 
+###### parse(string: str)
+
+`parse()` is used for some popular formats such as **RFC 3339**  and most **ISO 8601** formats. Parsing without `tz` argument given will admit the time zone is UTC.
+
+```python
+pendulum.parse('2021-10-08T22:00:00')
+pendulum.parse('2021/10/08 22:00:00')
+### DateTime(2021, 10, 8, 22, 0, 0, tzinfo=Timezone('UTC'))
+```
+
+A `ParseError` exception will be raised if pendulum fails to infer the format. To proceed without any exception, argument `strict` needs to be set `False`.
+
+```python
+pendulum.parse('10-08-2021')
+### ParserError: Unable to parse string [10-08-2021]
+
+pendulum.parse('10-08-2021', strict=False)
+### DateTime(2021, 10, 8, 0, 0, 0, tzinfo=Timezone('UTC'))
+```
+
+
+
+###### from_format(string: str, fmt: str, tz=Timezone('UTC'), locale=None)
+
+`from_format()` is recommended for more complex formats.
+
+```python
+pendulum.from_format('20211008142000', "YYYYMMDDHHmmss")
+### DateTime(2021, 10, 8, 14, 20, 0, tzinfo=Timezone('UTC'))
+```
+
+
+
 #### Arithmetics
 
 
