@@ -364,7 +364,99 @@ pendulum.from_format('20211008142000', "YYYYMMDDHHmmss")
 
 
 
-#### Arithmetics
+#### Manipulation
+
+```python
+dt=pendulum.local(2021, 10, 8, 8, 1, 2, 3)
+### dt = DateTime(2021, 10, 8, 8, 1, 2, 3, tzinfo=Timezone('Asia/Shanghai'))
+```
+
+##### Modification
+
+###### set
+
+Pendulum doesn't provide set functions like Java directly mutate the object/instance. Instead, it offers set()`,`on()` and `at()` functions to return a new instance with its responding attributes modified.
+
+Note, setting on the `timezone` with `set()` doesn't convert the datetime into the given time zone, but simply modify it in the returned instance. To actually convert the time zone, use `in_tz(name: str)` or `in_timezone(name: str)` instead.
+
+* `set(year: int, month: int, day: int, hour: int, minute: int, second: int, microsecond: int): DateTime `
+* `in_timezone(tz: str): DateTime`or `in_tz(tz: str): DateTime`
+* `on(year: int, month: int, day: int): DateTime`
+* `at(hour: int, minute: int, second: int, microsecond: int): DateTime`
+
+
+
+```python
+dt.set(year=2022, month=1, day=1, hour=2, minute=3, second=4)
+### DateTime(2022, 1, 1, 2, 3, 4, 3, tzinfo=Timezone('Asia/Shanghai'))
+
+dt
+### DateTime(2021, 10, 8, 8, 1, 2, 3, tzinfo=Timezone('Asia/Shanghai'))
+
+dt.set(tz='UTC')
+### DateTime(2021, 10, 8, 8, 1, 2, 3, tzinfo=Timezone('UTC'))
+
+dt.on(2000, 1, 1).at(2, 2, 2)
+### DateTime(2000, 1, 1, 2, 2, 2, tzinfo=Timezone('Asia/Shanghai'))
+```
+
+###### modifier
+
+* `start_of(unit: str = 'century' | 'decade' | 'year' | 'month' | 'week' | ...): DateTime`
+
+  Returns a copy of the instance whose properties are reset to the beginning within the time unit.
+
+* `end_of(unit: str = 'century' | 'decade' | 'year' | 'month' | 'week' | ...): DateTime`
+
+  Returns a copy of the instance whose properties are reset to the end within the time unit.
+
+* `next(day_of_week=None, keep_time=False): DateTime`
+
+  Modify to the next occurrence of a given day of the week.
+
+  If no day_of_week is provided, modify to the next occurrence of the current day of the week.  Use the supplied consts to indicate the desired day_of_week, ex. DateTime.MONDAY.
+
+* `previous(self, day_of_week=None, keep_time=False): DateTime`
+
+  Modify to the previous occurrence of a given day of the week.
+
+  If no day_of_week is provided, modify to the previous occurrence of the current day of the week.  Use the supplied consts to indicate the desired day_of_week, ex. DateTime.MONDAY.
+
+* `first_of()`, `last_of()`, `nth_of()` and etc.
+
+```python
+dt						### DateTime(2021, 10, 8, 8, 1, 2, 3, tzinfo=Timezone('Asia/Shanghai'))
+
+dt.start_of('century')	### DateTime(2001, 1, 1, 0, 0, 0, tzinfo=Timezone('Asia/Shanghai'))
+dt.start_of('decade')  	### DateTime(2020, 1, 1, 0, 0, 0, tzinfo=Timezone('Asia/Shanghai'))
+dt.start_of('year')		### DateTime(2021, 1, 1, 0, 0, 0, tzinfo=Timezone('Asia/Shanghai'))
+dt.start_of('month')	### DateTime(2021, 10, 1, 0, 0, 0, tzinfo=Timezone('Asia/Shanghai'))
+dt.start_of('day')		### DateTime(2021, 10, 8, 0, 0, 0, tzinfo=Timezone('Asia/Shanghai'))
+
+
+dt.end_of('decade')		### DateTime(2029, 12, 31, 23, 59, 59, 999999, tzinfo=Timezone('Asia/Shanghai'))
+dt.end_of('century')	### DateTime(2100, 12, 31, 23, 59, 59, 999999, tzinfo=Timezone('Asia/Shanghai'))
+dt.end_of('year')		### DateTime(2021, 12, 31, 23, 59, 59, 999999, tzinfo=Timezone('Asia/Shanghai'))
+dt.end_of('month')		### DateTime(2021, 10, 31, 23, 59, 59, 999999, tzinfo=Timezone('Asia/Shanghai'))
+dt.end_of('day')		### DateTime(2021, 10, 8, 23, 59, 59, 999999, tzinfo=Timezone('Asia/Shanghai'))
+
+dt.day_of_week					### 5;
+pendulum.FRIDAY					### 5; dt.day_of_week = pendulum.FRIDAY
+dt.next(pendulum.SUNDAY)		### DateTime(2021, 10, 10, 0, 0, 0, tzinfo=Timezone('Asia/Shanghai'))
+dt.next(pendulum.FRIDAY)		### DateTime(2021, 10, 15, 0, 0, 0, tzinfo=Timezone('Asia/Shanghai'))
+dt.previous(pendulum.MONDAY)	### DateTime(2021, 10, 4, 0, 0, 0, tzinfo=Timezone('Asia/Shanghai'))
+dt.previous(pendulum.FRIDAY)	### DateTime(2021, 10, 1, 0, 0, 0, tzinfo=Timezone('Asia/Shanghai'))
+```
+
+
+
+##### Comparison
+
+
+
+##### Arithmetic
+
+
 
 
 
