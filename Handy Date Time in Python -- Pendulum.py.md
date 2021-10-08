@@ -2,7 +2,7 @@
 
 [TOC]
 
-### Built-in Date Time in Python Recap
+### Built-in Date Time in Python short Recap
 
 Python provides classes `date`, `datetime`, `time`, `timedelta` and `timezone` for datetime scenarios and `calendar` for calendar scenarios.
 
@@ -11,17 +11,61 @@ import datetime
 import time
 
 #### Instantiation
+dt = datetime.datetime(2021, 10, 8)	# datetime.datetime(2021, 10, 8, 0, 0)
+
+datetime.datetime.today() 			# datetime.datetime(2021, 10, 8, 17, 10, 55, 377010)
+datetime.datetime.now() 			# datetime.datetime(2021, 10, 8, 17, 18, 31, 636877)
+
+datetime.datetime.fromtimestamp(1633684255)	# datetime.datetime(2021, 10, 8, 17, 10, 55)
+
+d = datetime.date(2021, 10, 8)
+t = datetime.time(1, 2, 3)
+dt = datetime.combine(d, t)					# datetime.datetime(2021, 10, 8, 1, 2, 3)
 
 #### Localization and Time Zones
+datetime.datetime.now() 		# datetime.datetime(2021, 10, 8, 17, 18, 31, 636877)
+datetime.datetime.utcnow()		# datetime.datetime(2021, 10, 8, 9, 18, 40, 872352)
+
+# UTC+0
+datetime.now(timezone.utc)
+## datetime.datetime(2021, 10, 8, 9, 18, 40, 872352, tzinfo=datetime.timezone.utc)
+# UTC+8
+datetime.datetime(2021, 10, 8, tzinfo=datetime.timezone(datetime.timedelta(hours=8)))
+## datetime.datetime(2021, 10, 8, 0, 0, tzinfo=datetime.timezone(datetime.timedelta(seconds=60\*60\*8)))
 
 #### Attributes
+dt.year					# 2021
+dt.month				# 10
+dt.day					# 8
+dt.hour					# 1
+dt.minute				# 2
+dt.second				# 3
+dt.microsecond			# 0
+dt.tzinfo				# 
+dt.date()				# datetime.date(2021, 10, 8)
+dt.time()				# datetime.time(1, 2, 3)
+dt.weekday()			# 4
+dt.timestamp()			# 1633626123.0
+
 
 #### String Formatting
+dt.strftime('%Y-%m-%d %H:%M:%S')		# '2021-10-08 01:02:03'
+dt.isoformat(sep='T', timespec='auto')	# '2021-10-08T01:02:03'
 
 #### String Parsing 
+datetime.fromisoformat('2021-10-08T00:05:23+08:00')
+## datetime.datetime(2021, 10, 8, 0, 5, 23, tzinfo=datetime.timezone(datetime.timedelta(seconds=28800)))
+
+datetime.strptime('2021-10-08 08:00:00', '%Y-%m-%d %H:%M:%S')
+## datetime.datetime(2021, 10, 8, 8, 0)
 
 #### Arithmetics
-
+start = datetime.datetime(2021, 1, 1)
+end = datetime.datetime(2021, 10, 8)
+start < end								# True
+start > end								# False
+delta = end - start						# delta = datetime.timedelta(days=280)
+end == start + delta					# True
 
 ```
 
