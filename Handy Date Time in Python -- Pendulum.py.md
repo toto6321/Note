@@ -205,7 +205,7 @@ A `timestamp` ([Unix time](https://en.wikipedia.org/wiki/Unix_time)) is a number
 
 > **Unix time** (also known as **Epoch time**, **Posix time**,[[1\]](https://en.wikipedia.org/wiki/Unix_time#cite_note-1) **seconds since the Epoch**,[[2\]](https://en.wikipedia.org/wiki/Unix_time#cite_note-single-unix-spec-4.16-2) or **UNIX Epoch time**[[3\]](https://en.wikipedia.org/wiki/Unix_time#cite_note-3)) is a system for describing a [point in time](https://en.wikipedia.org/wiki/Timestamp). It is the number of [seconds](https://en.wikipedia.org/wiki/Second) that have elapsed since the *Unix epoch*, excluding [leap seconds](https://en.wikipedia.org/wiki/Leap_second). The Unix epoch is 00:00:00 [UTC](https://en.wikipedia.org/wiki/Coordinated_Universal_Time) on 1 January 1970 (an arbitrary date).
 
-When `tz` argument is given, it actually means **THE INSTANCE** created by `from_timestamp()` is **formatted** for output to the given time zone. 
+When `tz` argument is given, it actually means **THE INSTANCE** created by `from_timestamp()` with the **TIMESTAMP** is later **FORMATTED**  to the given time zone for display.
 
 
 #### Attributes
