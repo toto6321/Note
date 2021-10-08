@@ -136,7 +136,7 @@ print(dt.timezone.name)
 
 ##### Practical Cases
 
-###### datetime()
+###### datetime(year, month, day, hour=0, minute=0, second=0, microsecond=0, tz=Timezone('UTC'))
 
 The `datetime()` helper sets the time to 00:00:00 if it's not specified, and the timezone (the `tz` keyword argument) to **UTC**. 
 Otherwise it can be a `Timezone` instance or simply a string timezone value such as 'Asia/Shanghai'.
@@ -149,7 +149,7 @@ pendulum.datetime(2021, 10, 8, tz='Asia/Shanghai')
 ### DateTime(2021, 10, 8, 0, 0, 0, tzinfo=Timezone('Asia/Shanghai'))
 ```
 
-###### local()
+###### local(year, month, day, hour=0, minute=0, second=0, microsecond=0)
 
 `local()` is similar to `datetime()` but automatically sets the timezone to the **local timezone**.
 
@@ -159,7 +159,7 @@ print(dt.timezone.name)
 ### 'Asia/Shanghai'
 ```
 
-###### from_format()
+###### from_format(string, fmt, tz=Timezone('UTC'), locale=None)
 
 `from_format()`, is similar to the native `datetime.strptime()` function but uses custom tokens to create a `DateTime` instance.
 
@@ -170,7 +170,7 @@ pendulum.from_format('2021-10-08 12:00:00', 'YYYY-MM-DD HH:mm:ss')
 ### DateTime(2021, 10, 8, 12, 0, 0, tzinfo=Timezone('UTC'))
 ```
 
-###### from_timestamp()
+###### from_timestamp(timestamp, tz=Timezone('UTC'))
 
 `from_timestamp()` set the timezone default to UTC unless `tz` argument is given.
 
@@ -276,15 +276,11 @@ dt.to_w3c_string()					### '2021-10-08T08:01:02+08:00'
 dt.to_atom_string()					### '2021-10-08T08:01:02+08:00'
 ```
 
-
-
 ##### Formatter
 
 ```python
 dt=pendulum.local(2021, 10, 8, 8, 1, 2, 3)
 ```
-
-
 
 ###### 	strftime(format: str)
 
@@ -302,6 +298,34 @@ dt.format(token)					#### '2021-10-08 08:01:02'
 ```
 
 Refer to [token](https://pendulum.eustace.io/docs/#string-formatting) for full specification.
+
+###### localization token
+
+There are a few tokens that can be used to format an instance based on its locale. 
+
+Behaviors may vary from locales due to culture diversities.
+
+| Behaviors                                         | Token | Example                         |
+| ------------------------------------------------- | ----- | ------------------------------- |
+| Time                                              | LT    | 8:30 PM                         |
+| Time with seconds                                 | LTS   | 8:30:25 PM                      |
+| Month numeral, day of month, year                 | L     | 09/04/1986                      |
+| Month name, day of month, year                    | LL    | September 4 1986                |
+| Month name, day of month, year, time              | LLL   | September 4 1986 8:30 PM        |
+| Month name, day of month, day of week, year, time | LLLL  | Thursday, September 4 1986 8:30 |
+
+```python
+dt.format('LLLL')					### 'Friday, October 8, 2021 8:01 AM'
+dt.format('LLLL', locale='zh')		### '2021年10月8日星期五上午8点01分'
+```
+
+###### escaping characters
+
+Use square brackets wrapping the characters you want to be escaped.
+
+```python
+dt.format('[Date:] YYYY-MM-DD')					#### 'Date: 2021-10-08'
+```
 
 
 
