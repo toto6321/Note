@@ -256,6 +256,55 @@ dt.timetz()				### datetime.time(8, 1, 2, 3, tzinfo=Timezone('Asia/Shanghai'))
 
 #### String Formatting
 
+The `__str__` magic method is defined to allow `DateTime` instances to be printed as a pretty date string.
+
+The default string representation is the same as the one returned by the `isoformat()` method.
+
+##### Popular Format
+
+```python
+dt=pendulum.local(2021, 10, 8, 8, 1, 2, 3)
+
+dt.to_date_string()					### '2021-10-08'
+dt.to_time_string()					### '08:00:00'
+dt.to_datetime_string()				### '2021-10-08 08:01:02'
+dt.to_day_datetime_string()			### 'Fri, Oct 8, 2021 8:01 AM'
+
+dt.to_formatted_date_string()		### 'Oct 08, 2021'
+dt.to_iso8601_string()				### '2021-10-08T08:01:02.000003+08:00'
+dt.to_w3c_string()					### '2021-10-08T08:01:02+08:00'
+dt.to_atom_string()					### '2021-10-08T08:01:02+08:00'
+```
+
+
+
+##### Formatter
+
+```python
+dt=pendulum.local(2021, 10, 8, 8, 1, 2, 3)
+```
+
+
+
+###### 	strftime(format: str)
+
+Inherited from `datetime.datetime.strftime()`
+
+```python
+dt.strftime('%Y-%m-%d %H:%M:%S')	### '2021-10-08 08:01:02'
+```
+
+###### format(token: str)
+
+```python
+token='YYYY-MM-DD HH:mm:ss'
+dt.format(token)					#### '2021-10-08 08:01:02'
+```
+
+Refer to [token](https://pendulum.eustace.io/docs/#string-formatting) for full specification.
+
+
+
 #### String Parsing 
 
 #### Arithmetics
