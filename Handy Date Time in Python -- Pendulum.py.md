@@ -92,6 +92,9 @@ from_timestamp() will create a DateTime instance equal to the given timestamp an
 dt = pendulum.from_timestamp(-1)
 ### DateTime(1969, 12, 31, 23, 59, 59, tzinfo=Timezone('UTC'))
 
+dt = pendulum.from_timestamp(0)
+### DateTime(1970, 1, 1, 8, 0, 0, tzinfo=Timezone('UTC'))
+
 dt = pendulum.from_timestamp(0, tz='Asia/Shanghai')
 ### DateTime(1970, 1, 1, 8, 0, 0, tzinfo=Timezone('Asia/Shanghai'))
 
@@ -207,8 +210,49 @@ A `timestamp` ([Unix time](https://en.wikipedia.org/wiki/Unix_time)) is a number
 
 When `tz` argument is given, it actually means **THE INSTANCE** created by `from_timestamp()` with the **TIMESTAMP** is later **FORMATTED**  to the given time zone for display.
 
-
 #### Attributes
+
+```python
+dt=pendulum.local(2021, 10, 8, 8, 1, 2, 3)
+```
+```python
+dt.year					### 2021
+dt.month				### 10
+dt.day					### 8
+dt.hour					### 8
+dt.minute				### 1
+dt.second 				### 2
+dt.microsecond 			### 3
+
+dt.day_of_week 			### 5
+dt.day_of_year 			### 281
+dt.days_in_month		### 31 ATTENTION: it is the total number of days in this month
+dt.week_of_month		### 2
+dt.week_of_year			### 40
+dt.quarter				### 4
+
+dt.timestamp()			### 1633651262.000003  = dt.float_timestamp()
+dt.float_timestamp()	### 1633651262.000003  = dt.timestamp()
+dt.int_timestamp()		### 1633651262 integer
+
+
+dt.offset_hours			### 8.0 (UTC+8)
+# Returns an int of seconds difference from UTC (+/- sign included)
+dt.offset				### 28800 = 60 * 60 * 8 (UTC+8)
+
+dt.tz					### Timezone('Asia/Shanghai')
+dt.timezone				### Timezone('Asia/Shanghai')
+dt.timeinfo				### Timezone('Asia/Shanghai')
+dt.timezone_name		### 'Asia/Shanghai'
+dt.timezone.name		### 'Asia/Shanghai'
+
+dt.date()				### Date(2021, 10, 8)
+dt.time()				### Time(8, 1, 2, 3)
+dt.timetz()				### datetime.time(8, 1, 2, 3, tzinfo=Timezone('Asia/Shanghai'))
+
+```
+
+
 
 #### String Formatting
 
