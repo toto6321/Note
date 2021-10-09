@@ -129,7 +129,7 @@ Well, to figure out what it happens behind, we need to recall a little bit **Ope
 | **[String operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#string_operators)** |      \+=       | Concatenation assignment                     | x += y                                   |            |
 |                                                              |                |                                              |                                          |            |
 | **[Unary operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#unary_operators)** |   **delete**   | Delete an object’s property                  |                                          |            |
-| **[Unary operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#unary_operators)** |     typeof     | Return variable type string                  |                                          |            |
+| **[Unary operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#unary_operators)** |   **typeof**   | Return variable type string                  |                                          |            |
 | **[Unary operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#unary_operators)** |    **void**    | Evaluate an expression without a return      |                                          |            |
 |                                                              |                |                                              |                                          |            |
 | **[Relational operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#relational_operators)** |     **in**     | Evaluate if the property is in the object    |                                          |            |
@@ -144,10 +144,11 @@ Well, to figure out what it happens behind, we need to recall a little bit **Ope
 
 ##### [Operator Precedence](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#operator_precedence)
 
+> The *precedence* of operators determines the order they are applied when  evaluating an expression. You can override operator precedence by using parentheses.
+>
+> The following table describes the precedence of operators, from highest to lowest. 
 
-The *precedence* of operators determines the order they are applied when  evaluating an expression. You can override operator precedence by using parentheses.
-
-The following table describes the precedence of operators, from highest to lowest.
+For complete specification, please refer to [Table](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Operators/Operator_Precedence#table).
 
 | Operator type          | Individual operators                                 |
 | ---------------------- | ---------------------------------------------------- |
@@ -176,6 +177,8 @@ When **comparing** a string with a number, JavaScript will convert the string to
 
 ##### Data Types in JavaScript
 
+For complete specification, please refer to https://developer.mozilla.org/en-US/docs/Web/JavaScript/Data_structures#primitive_values.
+
 * Primitive values
   * Boolean
   * Null
@@ -189,6 +192,34 @@ When **comparing** a string with a number, JavaScript will convert the string to
   * Array
   * Date
   * null
+
+##### Type conversions
+
+Reference:
+
+* https://javascript.info/type-conversions
+
+###### Primitive to primitive type
+
+| From Type                   | To Type | Success                           | Failure |
+| --------------------------- | ------- | --------------------------------- | ------- |
+| Boolean                     | Number  | 1 or 0                            | -       |
+| undefined                   | Number  | NaN                               | -       |
+| null                        | Number  | 0                                 | -       |
+| String (auto trimming)      | Number  | 0 or Number                       | NaN     |
+| String (no auto trimming)   | Boolean | "" and "0" -> false; else -> true | -       |
+| Number                      | Boolean | 0 -> false; else -> true          | -       |
+| null, undefined, NaN, "", 0 | Boolean | 0                                 | -       |
+| Boolean                     | String  | "true", "else"                    | -       |
+| undefined, null, NaN        | String  | "undefined", "null", "NaN"        | -       |
+
+* Numeric conversion
+
+###### Object to primitive
+
+1. **All objects **are `true` in a Boolean context.
+2. The numeric conversion happens when we subtract objects or apply mathematical functions.
+3. String conversion scenarios.
 
 
 
@@ -223,21 +254,21 @@ When **comparing** a string with a number, JavaScript will convert the string to
 
 ##### Implicit Type Casting Rules in JS
 
+When the operands are of different data types, implicit type casting will happen if no explicit type casted to is given.
 
+| operator                              | potential data type operands will be casted to |
+| ------------------------------------- | ---------------------------------------------- |
+| Arithmetic operators: `+, -, *, /, %` | Number                                         |
+| String operators: `+`                 | String                                         |
+| Bitwise operators: `&, | , !, ^`      | Number                                         |
 
+**To do the conversion, JavaScript tries to find and call three object methods:**
 
-
-
-
-
-
-
-
-
-
-
-
-
+1. Call `obj[Symbol.toPrimitive](hint)` – the method with the symbolic key `Symbol.toPrimitive` (system symbol), if such method exists,
+2. Otherwise if hint is "string"
+   - try `obj.toString()` and `obj.valueOf()`, whatever exists.
+3. Otherwise if hint is "number" or "default"
+   - try `obj.valueOf()` and `obj.toString()`, whatever exists.
 
 
 
