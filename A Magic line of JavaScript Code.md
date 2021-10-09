@@ -81,7 +81,7 @@ Well, to figure out what it happens behind, we need to recall a little bit **Ope
 | **[Arithmetic operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#arithmetic_operators)** |       ++       | Increment                                    |                                          |            |
 | **[Arithmetic operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#arithmetic_operators)** |       --       | Decrement                                    |                                          |            |
 | **[Arithmetic operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#arithmetic_operators)** |       +        | Unary plus (+)                               | \+”3” <br />+”true”                      | 3<br />1   |
-| **[Arithmetic operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#arithmetic_operators)** |       -        | Unary negation (-)                           |                                          |            |
+| **[Arithmetic operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#arithmetic_operators)** |       -        | Unary negation (-)                           | - "3"<br />- "-3"                        | -3<br />3  |
 | **[Arithmetic operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#arithmetic_operators)** |       **       | Exponentiation operator (**)                 | 2**3                                     | 8          |
 |                                                              |                |                                              |                                          |            |
 | **[Logical operators](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Guide/Expressions_and_Operators#logical_operators)** |       &&       | Logical AND (&&)                             |                                          |            |
@@ -218,8 +218,51 @@ Reference:
 ###### Object to primitive
 
 1. **All objects **are `true` in a Boolean context.
-2. The numeric conversion happens when we subtract objects or apply mathematical functions.
-3. String conversion scenarios.
+2. Numeric conversion happens when we subtract objects or apply mathematical functions.
+3. String conversion happens whenever a string is needed such as `alert()` and `console.log()`.
+
+
+
+
+
+**To do the conversion, JavaScript tries to do the following jobs in orders:**
+
+1. Call `obj[Symbol.toPrimitive](hint)` – the method with the symbolic key `Symbol.toPrimitive` (system symbol), if such method exists,
+2. Otherwise if hint is "string"
+   - try `obj.toString()` and `obj.valueOf()`, whatever exists.
+3. Otherwise if hint is "number" or "default"
+   - try `obj.valueOf()` and `obj.toString()`, whatever exists.
+
+```javascript
+var obj1 = {};
+console.log(+obj1);     // NaN
+console.log(`${obj1}`); // "[object Object]"
+console.log(obj1 + ''); // "[object Object]"
+
+// An object with Symbol.toPrimitive property.
+var obj2 = {
+  [Symbol.toPrimitive](hint) {
+    if (hint == 'string') {
+      return 'It is a string!';
+    }
+    if (hint == 'number') {
+      return 100;
+    }
+    return true;
+  }
+};
+
+console.log(+obj2);     // 100        			-- hint is "number"
+console.log(`${obj2}`); // "It is a string!"   	-- hint is "string"
+console.log(obj2 + ''); // "true"    			-- hint is "default"
+console.log(!obj2); 	// false				-- hint is "default"
+
+console.log(obj1);
+// { [Symbol(Symbol.toPrimitive)]: [Function: [Symbol.toPrimitive]] }
+obj3={"name": "obj3"}
+console.log(obj3)
+//{ name: 'obj3' }
+```
 
 
 
@@ -256,31 +299,24 @@ Reference:
 
 When the operands are of different data types, implicit type casting will happen if no explicit type casted to is given.
 
-| operator                              | potential data type operands will be casted to |
-| ------------------------------------- | ---------------------------------------------- |
-| Arithmetic operators: `+, -, *, /, %` | Number                                         |
-| String operators: `+`                 | String                                         |
-| Bitwise operators: `&, | , !, ^`      | Number                                         |
-
-**To do the conversion, JavaScript tries to find and call three object methods:**
-
-1. Call `obj[Symbol.toPrimitive](hint)` – the method with the symbolic key `Symbol.toPrimitive` (system symbol), if such method exists,
-2. Otherwise if hint is "string"
-   - try `obj.toString()` and `obj.valueOf()`, whatever exists.
-3. Otherwise if hint is "number" or "default"
-   - try `obj.valueOf()` and `obj.toString()`, whatever exists.
+| operator                                         | potential data types will be casted to |
+| ------------------------------------------------ | -------------------------------------- |
+| Arithmetic operators: `+, -, *, /, %, --, ++, ~` | Number                                 |
+| String operators: `+`                            | String                                 |
+| Bitwise operators: `&, | , !, ^`                 | Boolean                                |
+| **Index**: []                                    | Number, String, Object                 |
 
 
 
+Now, it's time to break down the magic string and do the work piece by piece, following the rules above.
 
+```javascript
+(!(~+[])+{})[--[~+""][+[]]*[~+[]] + ~~!+[]]+({}+[])[[~!+[]]*~+[]]
+```
 
+![](.\magic-js-without-annotation.svg)
 
-
-
-
-
-
-
+Have fun!
 
 
 
