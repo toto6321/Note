@@ -320,6 +320,10 @@ Note: the string below has been formatted (spaces added) with intention, but it 
 
 ![](.\magic-js-tu_without-annotation.svg)
 
+If SVG is working, see PNG below instead.
+
+![](.\magic-js-tu_without-annotation.png)
+
 Have fun!
 
 
