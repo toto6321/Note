@@ -191,7 +191,7 @@ For complete specification, please refer to https://developer.mozilla.org/en-US/
   * Function
   * Array
   * Date
-  * null
+  * ...
 
 ##### Type conversions
 
