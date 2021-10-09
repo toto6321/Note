@@ -1,10 +1,10 @@
-# A Magic line of JavaScript Code
+## A Magic line of JavaScript Code
 
 @author: Tianhuan Tu
 
 @date: 2021-10-08
 
-
+[TOC]
 
 ------
 
@@ -307,6 +307,8 @@ When the operands are of different data types, implicit type casting will happen
 | **Index**: []                                    | Number, String, Object                 |
 
 
+
+### Solution
 
 Now, it's time to break down the magic string and do the work piece by piece, following the rules above.
 
