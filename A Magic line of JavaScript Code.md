@@ -314,7 +314,7 @@ Now, it's time to break down the magic string and do the work piece by piece, fo
 (!(~+[])+{})[--[~+""][+[]]*[~+[]] + ~~!+[]]+({}+[])[[~!+[]]*~+[]]
 ```
 
-![](.\magic-js-without-annotation.svg)
+![](.\magic-js_without-annotation.svg)
 
 Have fun!
 
