@@ -25,7 +25,7 @@ How well do you believe you master JavaScript?
 Great! Please try to tell what the following code below yields.
 
 ```javasript
-(!(~+[])+{})[--[~+""][+[]]*[~+[]] + ~~!+[]]+({}+[])[[~!+[]]*~+[]]
+({}+[])[--[~+""][+[]]*[~-[]]+~~!+[]<<[~![+{}]*(~+[])]]+(!!(~+[])+"")[-~([]&&!{}==![])]
 ```
 
 >  What *** ?! ...
@@ -310,11 +310,15 @@ When the operands are of different data types, implicit type casting will happen
 
 Now, it's time to break down the magic string and do the work piece by piece, following the rules above.
 
+Note: the string below has been formatted (spaces added) with intention, but it is same as the one in the beginning.
+
 ```javascript
-(!(~+[])+{})[--[~+""][+[]]*[~+[]] + ~~!+[]]+({}+[])[[~!+[]]*~+[]]
+({} + [])[--[~+""][+[]] * [~-[]] + ~~!+[] << [~![+{}] * (~+[])]] + (!!(~+[]) + "")[-~([] && !{} == ![])]
+
+// it produces a string of "tu"
 ```
 
-![](.\magic-js_without-annotation.svg)
+![](.\magic-js-tu_without-annotation.svg)
 
 Have fun!
 
